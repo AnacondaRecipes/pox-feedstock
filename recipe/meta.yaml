@@ -11,24 +11,27 @@ source:
 
 build:
   number: 0
-  skip: true  # [py<37]
+  skip: true  # [py<38]
   script: {{ PYTHON }} -m pip install . --no-deps --no-build-isolation -vv
 
 requirements:
   host:
+    - python
     - pip
     - setuptools >=42
-    - python
   run:
     - python
 
 test:
-  requires:
-    - pip
   imports:
     - pox
+  requires:
+    - pip
+    - pytest
   commands:
     - pip check
+    - python -c "from importlib.metadata import version; assert(version('{{ name }}')=='{{ version }}')"
+    - pytest --pyargs pox.tests
 
 about:
   home: https://github.com/uqfoundation/pox
